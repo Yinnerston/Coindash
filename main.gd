@@ -51,13 +51,14 @@ func new_game():
 	spawn_coins()
 	$HUD.update_score(score)
 	$HUD.update_timer(time_left)
+	# Clean up obstacles and powerups on first level
+	get_tree().call_group("obstacles", "queue_free")	# Remove all notes in group "coins"
+	get_tree().call_group("powerups", "queue_free")	# Remove all notes in group "coins"
 
 func game_over():
 	playing = false
 	$GameTimer.stop()
 	get_tree().call_group("coins", "queue_free")	# Remove all notes in group "coins"
-#	get_tree().call_group("obstacles", "queue_free")	# Remove all notes in group "coins"
-#	get_tree().call_group("powerups", "queue_free")	# Remove all notes in group "coins"
 	$HUD.show_game_over()
 	$Player.die()
 	$EndSound.play()
