@@ -1,14 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://cfr1b341hrpff"]
+[gd_scene load_steps=12 format=3 uid="uid://cfr1b341hrpff"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_eavnh"]
 [ext_resource type="PackedScene" uid="uid://cq6x245a20qmu" path="res://coin.tscn" id="2_qne7f"]
+[ext_resource type="PackedScene" uid="uid://t6pap3j820e7" path="res://powerup.tscn" id="3_8yf4c"]
 [ext_resource type="Texture2D" uid="uid://kjjwtevlkx0o" path="res://assets/grass.png" id="3_agv82"]
 [ext_resource type="PackedScene" uid="uid://pcmt3p6bf8y2" path="res://player.tscn" id="4_ctqk8"]
+[ext_resource type="PackedScene" uid="uid://bnp4qfaoqn8b7" path="res://cactus.tscn" id="4_im1mj"]
 [ext_resource type="PackedScene" uid="uid://bpa7fbfktc4pq" path="res://hud.tscn" id="5_i6n6s"]
+[ext_resource type="AudioStream" uid="uid://dugyqtsb832cn" path="res://assets/audio/Coin.wav" id="6_ssaoy"]
+[ext_resource type="AudioStream" uid="uid://bx6e7ccvdero1" path="res://assets/audio/Level.wav" id="7_txx1m"]
+[ext_resource type="AudioStream" uid="uid://d3nlk5r6wgo8v" path="res://assets/audio/EndSound.wav" id="8_15k78"]
+[ext_resource type="AudioStream" uid="uid://c35iuca3ogysu" path="res://assets/audio/Powerup.wav" id="9_3u6xb"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_eavnh")
 coin_scene = ExtResource("2_qne7f")
+powerup_scene = ExtResource("3_8yf4c")
+obstacle_scene = ExtResource("4_im1mj")
 
 [node name="Background" type="TextureRect" parent="."]
 anchors_preset = 15
@@ -25,5 +33,23 @@ stretch_mode = 1
 
 [node name="HUD" parent="." instance=ExtResource("5_i6n6s")]
 
+[node name="CoinSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_ssaoy")
+
+[node name="LevelSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_txx1m")
+
+[node name="EndSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_15k78")
+
+[node name="PowerupTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="PowerupSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_3u6xb")
+
+[connection signal="hurt" from="Player" to="." method="_on_player_hurt"]
+[connection signal="pickup" from="Player" to="." method="_on_player_pickup"]
 [connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
 [connection signal="start_game" from="HUD" to="." method="_on_hud_start_game"]
+[connection signal="timeout" from="PowerupTimer" to="." method="_on_powerup_timer_timeout"]
